@@ -3,13 +3,14 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import Profile from "../assets/p.png";
 import Spinner from "../components/Spinner";
-import { NavLink } from 'react-router-dom';
-import { FaPlus } from 'react-icons/fa';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { FaPlus, FaCog } from 'react-icons/fa';
 
 function MySpace() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -30,8 +31,6 @@ function MySpace() {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log(response.data.foundUser);
-                
                 setUserData(response.data.foundUser);
             } catch (err) {
                 setError(err.response?.data?.message || err.message || 'Failed to fetch user data.');
@@ -39,7 +38,6 @@ function MySpace() {
                 setLoading(false);
             }
         };
-
         fetchUserData();
     }, []);
 
@@ -55,8 +53,19 @@ function MySpace() {
         return <div className="p-4">User data not found.</div>;
     }
 
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    };
+
+    const viewPost = (postId) => {
+        navigate(`/post/${postId}`);
+    };
+
     return (
-        <div className="h-screen w-full overflow-y-auto  bg-gradient-to-r from-blue-300 via-indigo-400 to-purple-500 ">
+        <div className="h-screen w-full overflow-y-auto bg-gradient-to-r from-blue-300 via-indigo-400 to-purple-500">
             <NavLink
                 to="/post/add"
                 className="fixed bottom-5 right-5 rounded-full bg-gradient-to-r from-orange-500 to-orange-700 p-4 shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105 flex items-center justify-center space-x-2 text-white"
@@ -65,7 +74,14 @@ function MySpace() {
                 <div className="font-semibold text-lg">New</div>
                 <FaPlus className="text-xl" />
             </NavLink>
-            <div className='bg-whiteshadow-xl w-full shadow-2xl rounded-b-lg bg-white'>
+            <div className='bg-whiteshadow-xl w-full shadow-2xl rounded-b-lg bg-white relative'>
+                <button
+                    onClick={() => navigate('/user/details')}
+                    className="absolute top-2 right-2 p-2 text-gray-800 hover:text-black"
+                    aria-label="Settings"
+                >
+                    <FaCog className="text-xl" />
+                </button>
                 <h2 className="text-3xl font-serif bg-gradient-to-r from-fuchsia-500 to-orange-500 text-white p-2 rounded-b-lg text-center ">
                     Welcome {userData.name}
                 </h2>
@@ -82,11 +98,11 @@ function MySpace() {
                             <h3 className="text-xl font-semibold mb-2 text-gray-800">User Information</h3>
                             <p className="text-gray-600">Email: {userData.email}</p>
                             {userData.phone && <p className="text-gray-600">Phone: {userData.phone}</p>}
-                            {userData.dob && <p className="text-gray-600">DoB: {userData.dob}</p>}
+                            {userData.dob && <p className="text-gray-600">DoB: {formatDate(userData.dob)}</p>}
                         </div>
                     </div>
-                    <div className='md:flex-grow md:max-w-1/2 items-center' >
-                        <div className='grid grid-cols-2  gap-4'>
+                    <div className='md:flex-grow md:max-w-1/2 items-center'>
+                        <div className='grid grid-cols-2 gap-4'>
                             <NavLink to="/notes" className='items-center text-center bg-gradient-to-r from-fuchsia-400 to-violet-500 p-3 rounded-xl shadow-sm'>
                                 <div className='text-md font-semibold text-white'>Notes</div>
                                 <div className='text-white'>{userData.notes?.length || 0}</div>
@@ -95,10 +111,10 @@ function MySpace() {
                                 <div className='text-md font-semibold text-white'>Contacts</div>
                                 <div className='text-white'>{userData.contacts?.length || 0}</div>
                             </NavLink>
-                            <div className='items-center text-center bg-gradient-to-r from-fuchsia-400 to-violet-500 p-3 rounded-xl shadow-sm'>
+                            <NavLink to="/user/posts" className='items-center text-center bg-gradient-to-r from-fuchsia-400 to-violet-500 p-3 rounded-xl shadow-sm'>
                                 <div className='text-md font-semibold text-white'>Posts</div>
                                 <div className='text-white'>{userData.posts?.length || 0}</div>
-                            </div>
+                            </NavLink>
                             <NavLink to="/events" className='items-center text-center bg-gradient-to-r from-fuchsia-400 to-violet-500 p-3 rounded-xl shadow-sm'>
                                 <div className='text-md font-semibold text-white'>Events</div>
                                 <div className='text-white'>{userData.events?.length || 0}</div>
@@ -107,14 +123,14 @@ function MySpace() {
                     </div>
                 </div>
             </div>
-            <div className=" p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
-                {userData.posts && userData.posts.map(post => (
-                    <div key={post._id}>
-                        {post.pic && <img src={post.pic} alt="Post" className="w-50 h-50 object-cover rounded-md mb-2" />}
-                    </div>
-                ))}
-            </div>
+            <div className="p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+                    {userData.posts && userData.posts.map(post => (
+                        <div key={post._id}>
+                            {post.pic && <img src={post.pic} alt="Post" className="w-50 h-50 object-cover rounded-md mb-2 cursor-pointer hover:scale-110" onClick={() => viewPost(post._id)}/>}
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

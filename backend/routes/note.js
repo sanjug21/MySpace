@@ -68,18 +68,24 @@ router.put('/:id', authenticateToken, validateNote, async (req, res) => {
 
 router.delete('/:id', authenticateToken, async (req, res) => {
   try {
-    const note = await Note.findById(req.params.id);
-    if (!note) {
-      return res.status(404).json({ message: 'Note not found' });
-    }
-    if (note.userId.toString() !== req.user.userId) {
-      return res.status(403).json({ message: 'Forbidden: You do not own this note' });
-    }
-    await Note.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Note deleted successfully' });
+      const note = await Note.findById(req.params.id);
+      if (!note) {
+          return res.status(404).json({ message: 'Note not found' });
+      }
+      if (note.userId.toString() !== req.user.userId) {
+          return res.status(403).json({ message: 'Forbidden: You do not own this note' });
+      }
+      await Note.findByIdAndDelete(req.params.id);
+
+      const user = await User.findById(req.user.userId);
+      if(user){
+        user.notes = user.notes.filter(noteId => noteId.toString() !== req.params.id);
+        await user.save();
+      }
+
+      res.json({ message: 'Note deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
   }
 });
-
 module.exports = router;

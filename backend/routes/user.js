@@ -29,7 +29,7 @@ router.post('/signin', async (req, res) => {
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
     if (isPasswordValid) {
       const token = jwt.sign(
-        { userId: user._id, name: user.name, pic:user.pic },
+        { userId: user._id, name: user.name, pic: user.pic },
         process.env.JWT_SECRET || 'secretKey',
         { expiresIn: '1h' }
       );
@@ -59,24 +59,33 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 
 router.get('/:id/details', authenticateToken, async (req, res) => {
   try {
-      let { id } = req.params;
-      
-      
-      if(req.user.userId !== id){
-          return res.status(403).json({message: 'Forbidden'})
-      }
-
-      let foundUser = await User.findById(id).populate('posts')
-     
-      
-      if (!foundUser) {
-          return res.status(404).json({ message: 'User not found' });
-      }
-
-      res.status(200).json({ foundUser });
+    const { id } = req.params;
+    if (req.user.userId !== id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+    const foundUser = await User.findById(id).populate('posts');
+    if (!foundUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ foundUser });
   } catch (e) {
-    
-      res.status(500).json({ message: e.message });
+    res.status(500).json({ message: e.message });
+  }
+});
+
+router.put('/:id/update', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (req.user.userId !== id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+    const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ message: 'User updated successfully', updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

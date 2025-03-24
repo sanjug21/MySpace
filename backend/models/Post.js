@@ -10,6 +10,10 @@ const postSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    id: {
+        type: String,
+        required: false,
+    },
     caption: {
         type: String,
     },
@@ -32,7 +36,7 @@ const postSchema = mongoose.Schema({
             default: Date.now
         }
     }]
-}, { timestamps: true }); 
+}, { timestamps: true });
 
 const Post = mongoose.model('Post', postSchema);
 

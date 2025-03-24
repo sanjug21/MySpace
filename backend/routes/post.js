@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
-const User = require('../models/User'); 
+const User = require('../models/User');
 const authenticateToken = require('../middlewares/authenticateToken');
-const { validatePost, uploadToCloudinary } = require('../middlewares/postMiddleware');
+const { validatePost, uploadToCloudinary, deleteFromCloudinary } = require('../middlewares/postMiddleware');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -21,16 +21,9 @@ router.post('/add', authenticateToken, upload.single('file'), uploadToCloudinary
 
 router.get('/', async (req, res) => {
     try {
-        let posts;
-        if (req.query.userId) {
-            posts = await Post.find({ userId: req.query.userId })
-                .populate('likes')
-                .populate('comments.user');
-        } else {
-            posts = await Post.find()
-                .populate('likes')
-                .populate('comments.user');
-        }
+        const posts = await Post.find()
+            .populate('likes')
+            .populate('comments.user');
         res.json(posts);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -51,14 +44,18 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.patch('/:id', authenticateToken, validatePost, async (req, res) => {
+router.put('/:id', authenticateToken, validatePost, async (req, res) => {
     try {
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        if (post.userId.toString() !== req.user.userId) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
         const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, { new: true })
             .populate('likes')
             .populate('comments.user');
-        if (!updatedPost) {
-            return res.status(404).json({ message: 'Post not found' });
-        }
         res.json(updatedPost);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -67,53 +64,24 @@ router.patch('/:id', authenticateToken, validatePost, async (req, res) => {
 
 router.delete('/:id', authenticateToken, async (req, res) => {
     try {
-        const deletedPost = await Post.findByIdAndDelete(req.params.id);
-
-        if (!deletedPost) {
-            return res.status(404).json({ message: 'Post not found' });
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            return res.status(404).json({ message: "post not found" });
         }
+        if (post.userId.toString() !== req.user.userId) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
+        if (post.id) {
+            await deleteFromCloudinary(post.id);
+        }
+
+        const deletedPost = await Post.findByIdAndDelete(req.params.id);
 
         await User.findByIdAndUpdate(deletedPost.userId, { $pull: { posts: req.params.id } });
 
-        res.json({ message: 'Post deleted' });
+        res.json({ message: 'Post and associated image deleted' });
     } catch (error) {
         res.status(500).json({ message: error.message });
-    }
-});
-
-router.patch('/:id/like', authenticateToken, async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.id);
-        if (!post) {
-            return res.status(404).json({ message: 'Post not found' });
-        }
-
-        if (post.likes.includes(req.user.userId)) {
-            post.likes = post.likes.filter(like => like.toString() !== req.user.userId.toString());
-        } else {
-            post.likes.push(req.user.userId);
-        }
-
-        const updatedPost = await post.save();
-        res.json(updatedPost);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-
-router.patch('/:id/comment', authenticateToken, async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.id);
-        if (!post) {
-            return res.status(404).json({ message: 'Post not found' });
-        }
-
-        post.comments.push({ ...req.body, user: req.user.userId });
-
-        const updatedPost = await post.save();
-        res.json(updatedPost);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
     }
 });
 

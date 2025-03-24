@@ -4,6 +4,7 @@ const Joi = require('joi');
 const postSchemaJoi = Joi.object({
     pic: Joi.string().uri().required(),
     caption: Joi.string().allow(''),
+    id: Joi.string().allow(null),
 });
 
 const validatePost = (req, res, next) => {
@@ -28,11 +29,14 @@ const uploadToCloudinary = async (req, res, next) => {
         }
 
         const dataURI = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-
+        
+        
         const result = await cloudinary.uploader.upload(dataURI, {
             resource_type: "auto",
         });
+
         req.body.pic = result.secure_url;
+        req.body.id = result.public_id;
         next();
     } catch (error) {
         console.error('Cloudinary upload error:', error);
@@ -40,7 +44,18 @@ const uploadToCloudinary = async (req, res, next) => {
     }
 };
 
+const deleteFromCloudinary = async (id) => {
+    try {
+        const response = await cloudinary.uploader.destroy(id);
+        return response;
+    } catch (error) {
+        console.error("Cloudinary deletion error:", error);
+        throw error;
+    }
+};
+
 module.exports = {
     validatePost,
-    uploadToCloudinary
+    uploadToCloudinary,
+    deleteFromCloudinary,
 };

@@ -22,7 +22,6 @@ function LogIn() {
 
       const token = response.data.token;
       localStorage.setItem('token', token);
-      window.dispatchEvent(new Event('storage'));
       navigate('/');
     } catch (err) {
       if (err.response) {

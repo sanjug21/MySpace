@@ -15,7 +15,9 @@ import AddNote from './Notes/AddNote';
 import ViewNote from './Notes/ViewNote';
 import LogIn from './Auth/LogIn';
 import SignUp from './Auth/SignUp';
-import AddPost from './MySpace/AddPost'; // Import AddPost
+import AddPost from './MySpace/AddPost';
+import UserDetails from './MySpace/UserDetails';
+import UserPosts from './MySpace/UserPosts';
 
 function App() {
 
@@ -99,7 +101,10 @@ function App() {
             <Route path="add" element={<AddContact />} />
             <Route path="edit/:id" element={<EditContact />} />
           </Route>
-          <Route path="/post/add" element={<AddPost />} /> {/* Add the route for AddPost */}
+          <Route path="/post/add" element={<AddPost />} />
+          <Route path="/user/details" element={<UserDetails />} />
+          
+          <Route path="/post/:postId" element={<UserPosts />} />
         </Route>
       </Routes>
     </BrowserRouter>
