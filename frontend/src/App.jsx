@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import Layout from './layout';
+import Layout from './Layout';
 import Notes from './Notes/Notes';
 import Events from './Events/Events';
 import Contacts from './Contacts/Contacts';
