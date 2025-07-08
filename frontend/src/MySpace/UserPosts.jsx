@@ -33,7 +33,7 @@ function UserPosts() {
                 //     },
                 // });
 
-                const response = await axios.get(`https://taskmap-backend.onrender.com/posts/${postId}`, {
+                const response = await axios.get(`https://myspace-k46b.onrender.com/posts/${postId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

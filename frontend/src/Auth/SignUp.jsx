@@ -18,7 +18,7 @@ function SignUp() {
       //   email,
       //   password,
       // });
-      await axios.post('https://taskmap-backend.onrender.com/auth/signup', {
+      await axios.post('https://myspace-k46b.onrender.com/auth/signup', {
         name,
         email,
         password,

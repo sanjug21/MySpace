@@ -12,7 +12,7 @@ function AddPost() {
   const [successMessage, setSuccessMessage] = useState(null);
   const navigate = useNavigate();
   // const apiUrl = "http://localhost:7125/";
-  const apiUrl = "https://taskmap-backend.onrender.com/";
+  const apiUrl = "https://myspace-k46b.onrender.com/";
 
   const updateFile = (e) => {
     const selectedFile = e.target.files[0];

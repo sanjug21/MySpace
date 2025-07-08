@@ -13,7 +13,7 @@ function AllNotes() {
     const [userImageUrl, setUserImageUrl] = useState(null);
 
     // const apiUrl = "http://localhost:7125/";
-    const apiUrl = "https://taskmap-backend.onrender.com/";
+    const apiUrl = "https://myspace-k46b.onrender.com/";
 
     const fetchNotes = async () => {
         setLoading(true);

@@ -35,7 +35,7 @@ function UserDetails() {
                 //         Authorization: `Bearer ${token}`,
                 //     },
                 // });
-                const response = await axios.get(`https://taskmap-backend.onrender.com/auth/${userId}/details`, {
+                const response = await axios.get(`https://myspace-k46b.onrender.com/auth/${userId}/details`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

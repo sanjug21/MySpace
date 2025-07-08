@@ -11,7 +11,7 @@ function ViewNote() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     // const apiUrl = "http://localhost:7125/";
-    const apiUrl = "https://taskmap-backend.onrender.com/";
+    const apiUrl = "https://myspace-k46b.onrender.com/";
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState('');
