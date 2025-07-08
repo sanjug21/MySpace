@@ -30,7 +30,12 @@ function UserDetails() {
                 const decodedToken = jwtDecode(token);
                 const userId = decodedToken.userId;
 
-                const response = await axios.get(`http://localhost:7125/auth/${userId}/details`, {
+                // const response = await axios.get(`http://localhost:7125/auth/${userId}/details`, {
+                //     headers: {
+                //         Authorization: `Bearer ${token}`,
+                //     },
+                // });
+                const response = await axios.get(`https://taskmap-backend.onrender.com/auth/${userId}/details`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

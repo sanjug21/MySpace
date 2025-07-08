@@ -14,7 +14,8 @@ function AddContact() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const apiUrl = "http://localhost:7125/";
+  // const apiUrl = "http://localhost:7125/";
+  const apiUrl = "https://taskmap-backend.onrender.com/";
   const topRef = useRef(null);
   const isPhoneEmpty = !formData.phone.personal && !formData.phone.work;
 

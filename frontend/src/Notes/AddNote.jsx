@@ -9,7 +9,8 @@ function AddNote() {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const navigate = useNavigate();
-    const apiUrl = "http://localhost:7125/";
+    // const apiUrl = "http://localhost:7125/";
+    const apiUrl = "https://taskmap-backend.onrender.com/";
 
     const submit = async (e) => {
         e.preventDefault();

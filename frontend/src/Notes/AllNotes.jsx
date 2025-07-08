@@ -12,7 +12,8 @@ function AllNotes() {
     const [userName, setUserName] = useState('');
     const [userImageUrl, setUserImageUrl] = useState(null);
 
-    const apiUrl = "http://localhost:7125/";
+    // const apiUrl = "http://localhost:7125/";
+    const apiUrl = "https://taskmap-backend.onrender.com/";
 
     const fetchNotes = async () => {
         setLoading(true);

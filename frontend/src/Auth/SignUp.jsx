@@ -13,7 +13,12 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:7125/auth/signup', { 
+      // await axios.post('http://localhost:7125/auth/signup', { 
+      //   name,
+      //   email,
+      //   password,
+      // });
+      await axios.post('https://taskmap-backend.onrender.com/auth/signup', {
         name,
         email,
         password,

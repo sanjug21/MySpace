@@ -15,7 +15,8 @@ function ViewContact() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [contactToDelete, setContactToDelete] = useState(null);
     const token = localStorage.getItem('token');
-    const apiUrl = "http://localhost:7125/";
+    // const apiUrl = "http://localhost:7125/";
+    const apiUrl = "https://taskmap-backend.onrender.com/";
 
     useEffect(() => {
         const fetchData = async () => {

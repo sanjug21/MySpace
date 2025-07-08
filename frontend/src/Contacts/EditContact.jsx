@@ -17,7 +17,8 @@ function EditContact() {
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const token = localStorage.getItem('token');
-    const apiUrl = "http://localhost:7125/";
+    // const apiUrl = "http://localhost:7125/";
+    const apiUrl = "https://taskmap-backend.onrender.com/";
 
     useEffect(() => {
         const fetchContact = async () => {
