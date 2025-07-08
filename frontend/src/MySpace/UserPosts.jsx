@@ -3,7 +3,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import Spinner from "../components/Spinner";
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaChevronLeft, FaChevronRight, FaHeart, FaComment } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaHeart, FaComment, FaArrowLeft } from 'react-icons/fa';
 
 function UserPosts() {
     const [post, setPost] = useState(null);
@@ -102,36 +102,46 @@ function UserPosts() {
     }
 
     return (
-        <div className="h-screen w-full overflow-y-auto bg-gradient-to-r from-purple-200 to-indigo-300 p-4">
+        <div className="min-h-screen w-full overflow-y-auto bg-gradient-to-r from-purple-200 to-indigo-300 p-4 relative">
             <div className="mb-4">
-                <button onClick={() => navigate('/')} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
-                    Back
+                <button onClick={() => navigate('/')} className="hover:text-blue-800 font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline flex items-center">
+                    <FaArrowLeft className="mr-2" />
                 </button>
             </div>
             <div className="flex justify-between items-center mb-4">
-                {prevId && (
-                    <button onClick={() => navigateToPost(prevId)} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
-                        <FaChevronLeft /> Previous
-                    </button>
-                )}
-                {nextId && (
-                    <button onClick={() => navigateToPost(nextId)} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
-                        Next <FaChevronRight />
-                    </button>
-                )}
+                <button
+                    onClick={prevId ? () => navigateToPost(prevId) : null}
+                    className={`absolute top-1/2 transform -translate-y-1/2 left-4 bg-black bg-opacity-20 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ${!prevId ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={!prevId}
+                >
+                    <FaChevronLeft />
+                </button>
+                <button
+                    onClick={nextId ? () => navigateToPost(nextId) : null}
+                    className={`absolute top-1/2 transform -translate-y-1/2 right-4 bg-black bg-opacity-20 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ${!nextId ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={!nextId}
+                >
+                    <FaChevronRight />
+                </button>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-6">
-                <h1 className="text-3xl font-bold text-gray-800 mb-4">{post.title}</h1>
-                {post.pic && <img src={post.pic} alt="Post" className="w-full object-cover rounded-md mb-4" />}
+            <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
                 <div className="mb-4">
-                    <p className="text-gray-700">{post.content}</p>
+                    <p className="text-gray-700">{post.caption}</p>
                 </div>
+                {post.pic && (
+                    <img
+                        src={post.pic}
+                        alt="Post"
+                        className="rounded-md mb-4 max-h-[500px] mx-auto block"
+                        style={{ maxWidth: '100%', objectFit: 'cover' }}
+                    />
+                )}
                 <div className="flex justify-between items-center text-gray-600">
                     <div className="flex items-center">
-                        <button className="flex items-center mr-4">
+                        <button className="flex items-center mr-4 text-red-500">
                             <FaHeart className="mr-1" /> {post.likes?.length || 0}
                         </button>
-                        <button className="flex items-center">
+                        <button className="flex items-center text-blue-500">
                             <FaComment className="mr-1" /> {post.comments?.length || 0}
                         </button>
                     </div>

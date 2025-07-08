@@ -4,6 +4,7 @@ import axios from 'axios';
 import Profile from '../assets/p.png';
 import { FaSearch, FaTimes, FaPlus } from 'react-icons/fa';
 import Spinner from '../components/Spinner';
+import { jwtDecode } from 'jwt-decode';
 
 function AllContacts() {
     const [contacts, setContacts] = useState([]);
@@ -31,9 +32,15 @@ function AllContacts() {
             });
             setContacts(response.data);
             setLoading(false);
-            const decodedToken = JSON.parse(atob(token.split('.')[1]));
-            setUserName(decodedToken.name || 'User');
-            setUserImageUrl(decodedToken.pic);
+            try {
+                const decodedToken = jwtDecode(token);
+                setUserName(decodedToken.name || 'User');
+                setUserImageUrl(decodedToken.pic);
+            } catch (decodeError) {
+                console.error('Error decoding token:', decodeError);
+                setUserName('User');
+                setUserImageUrl(null);
+            }
         } catch (err) {
             setError(err.response?.data?.message || err.message || 'Error fetching contacts.');
             setLoading(false);
@@ -59,7 +66,7 @@ function AllContacts() {
     }, [text, contacts]);
 
     return (
-        <div className='h-screen bg-gradient-to-r from-violet-200 to-violet-400'>
+        <div className='h-screen '>
             <div className='w-full p-3 align-middle h-12 bg-gradient-to-r from-orange-500 to-orange-400 flex justify-between items-center transition-shadow duration-300 ease-in-out'>
                 <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 rounded-full overflow-hidden">

@@ -30,7 +30,7 @@ router.post('/signin', async (req, res) => {
     if (isPasswordValid) {
       const token = jwt.sign(
         { userId: user._id, name: user.name, pic: user.pic },
-        process.env.JWT_SECRET || 'secretKey',
+        process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
       res.status(200).json({ message: 'Login successful', token, user: { _id: user._id, email: user.email, name: user.name } });

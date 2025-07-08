@@ -46,11 +46,11 @@ function MySpace() {
     }
 
     if (error) {
-        return <div className="text-red-500 p-4">Error: {error}</div>;
+        return <div className="text-red-700 bg-red-100 border border-red-200 p-4 rounded-md mx-auto my-8 max-w-lg shadow-md text-center">Error: {error}</div>;
     }
 
     if (!userData) {
-        return <div className="p-4">User data not found.</div>;
+        return <div className="p-4 text-center text-gray-600">User data not found.</div>;
     }
 
     const formatDate = (dateString) => {
@@ -65,72 +65,83 @@ function MySpace() {
     };
 
     return (
-        <div className="h-screen w-full overflow-y-auto bg-gradient-to-r from-blue-300 via-indigo-400 to-purple-500">
+        <div className="h-screen bg-gray-50 text-gray-800 font-sans overflow-y-auto">
             <NavLink
                 to="/post/add"
-                className="fixed bottom-5 right-5 rounded-full bg-gradient-to-r from-orange-500 to-orange-700 p-4 shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105 flex items-center justify-center space-x-2 text-white"
-                aria-label="Add contact"
+                className="fixed bottom-6 right-6 rounded-full bg-gradient-to-r from-teal-600 to-teal-800 p-4 shadow-lg hover:shadow-xl transition-transform transform hover:scale-105 flex items-center justify-center space-x-2 text-white z-50"
+                aria-label="Add new post"
             >
-                <div className="font-semibold text-lg">New</div>
+                <div className="font-semibold text-lg">New Post</div>
                 <FaPlus className="text-xl" />
             </NavLink>
-            <div className='bg-whiteshadow-xl w-full shadow-2xl rounded-b-lg bg-white relative'>
-                <button
-                    onClick={() => navigate('/user/details')}
-                    className="absolute top-2 right-2 p-2 text-gray-800 hover:text-black"
-                    aria-label="Settings"
-                >
-                    <FaCog className="text-xl" />
-                </button>
-                <h2 className="text-3xl font-serif bg-gradient-to-r from-fuchsia-500 to-orange-500 text-white p-2 rounded-b-lg text-center ">
-                    Welcome {userData.name}
+
+            <div className='bg-white shadow-xl rounded-b-lg relative'>
+                <h2 className="text-3xl font-serif bg-black text-white p-2 rounded-b-lg text-center shadow-md flex items-center justify-center relative">
+                    Welcome, {userData.name}!
+                    <button
+                        onClick={() => navigate('/user/details')}
+                        className="absolute right-4 text-gray-400 hover:text-white transition-colors duration-200"
+                        aria-label="Settings"
+                    >
+                        <FaCog className="text-2xl" />
+                    </button>
                 </h2>
-                <div className='flex flex-col md:flex-row p-3 space-x-6'>
-                    <div className='flex space-y-4 md:space-y-0 space-x-6 md:w-1/2'>
-                        <div className="flex justify-center w-50 h-50">
+                <div className='flex flex-col md:flex-row items-start md:space-x-8 p-4'>
+                    <div className='flex flex-col items-center md:items-start space-y-6 md:w-1/3 mb-8 md:mb-0'>
+                        <div className="flex-shrink-0 w-48 h-48 rounded-full overflow-hidden border-4 border-blue-400 shadow-lg">
                             {userData.pic ? (
-                                <img src={userData.pic} alt="Profile" className="w-50 h-50 rounded-full object-cover shadow-md" />
+                                <img src={userData.pic} alt="Profile" className="w-full h-full object-cover" />
                             ) : (
-                                <img src={Profile} alt="Default Profile" className="w-50 h-50 rounded-full object-cover shadow-md" />
+                                <img src={Profile} alt="Default Profile" className="w-full h-full object-cover" />
                             )}
                         </div>
-                        <div>
-                            <h3 className="text-xl font-semibold mb-2 text-gray-800">User Information</h3>
-                            <p className="text-gray-600">Email: {userData.email}</p>
-                            {userData.phone && <p className="text-gray-600">Phone: {userData.phone}</p>}
-                            {userData.dob && <p className="text-gray-600">DoB: {formatDate(userData.dob)}</p>}
+                        <div className="text-center md:text-left">
+                            <h3 className="text-2xl font-semibold mb-2 text-gray-900">Personal Information</h3>
+                            <p className="text-gray-700 text-lg">Email: <span className="font-medium text-gray-800">{userData.email}</span></p>
+                            {userData.phone && <p className="text-gray-700 text-lg">Phone: <span className="font-medium text-gray-800">{userData.phone}</span></p>}
+                            {userData.dob && <p className="text-gray-700 text-lg">DoB: <span className="font-medium text-gray-800">{formatDate(userData.dob)}</span></p>}
                         </div>
                     </div>
-                    <div className='md:flex-grow md:max-w-1/2 items-center'>
-                        <div className='grid grid-cols-2 gap-4'>
-                            <NavLink to="/notes" className='items-center text-center bg-gradient-to-r from-fuchsia-400 to-violet-500 p-3 rounded-xl shadow-sm'>
-                                <div className='text-md font-semibold text-white'>Notes</div>
-                                <div className='text-white'>{userData.notes?.length || 0}</div>
-                            </NavLink>
-                            <NavLink to="/contacts" className='items-center text-center bg-gradient-to-r from-fuchsia-400 to-violet-500 p-3 rounded-xl shadow-sm'>
-                                <div className='text-md font-semibold text-white'>Contacts</div>
-                                <div className='text-white'>{userData.contacts?.length || 0}</div>
-                            </NavLink>
-                            <NavLink to="/user/posts" className='items-center text-center bg-gradient-to-r from-fuchsia-400 to-violet-500 p-3 rounded-xl shadow-sm'>
-                                <div className='text-md font-semibold text-white'>Posts</div>
-                                <div className='text-white'>{userData.posts?.length || 0}</div>
-                            </NavLink>
-                            <NavLink to="/events" className='items-center text-center bg-gradient-to-r from-fuchsia-400 to-violet-500 p-3 rounded-xl shadow-sm'>
-                                <div className='text-md font-semibold text-white'>Events</div>
-                                <div className='text-white'>{userData.events?.length || 0}</div>
-                            </NavLink>
+                    <div className='md:flex-grow md:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6'>
+                        <NavLink to="/notes" className='flex flex-col items-center justify-center bg-gray-800 hover:bg-gray-700 transition-colors duration-200 p-4 rounded-xl shadow-md transform hover:scale-102 text-white'>
+                            <div className='text-lg font-bold mb-1'>Notes</div>
+                            <div className='text-2xl font-extrabold text-white'>{userData.notes?.length || 0}</div>
+                        </NavLink>
+                        <NavLink to="/contacts" className='flex flex-col items-center justify-center bg-gray-800 hover:bg-gray-700 transition-colors duration-200 p-4 rounded-xl shadow-md transform hover:scale-102 text-white'>
+                            <div className='text-lg font-bold mb-1'>Contacts</div>
+                            <div className='text-2xl font-extrabold text-white'>{userData.contacts?.length || 0}</div>
+                        </NavLink>
+                        <div className='flex flex-col items-center justify-center bg-gray-800 hover:bg-gray-700 transition-colors duration-200 p-4 rounded-xl shadow-md text-white'>
+                            <div className='text-lg font-bold mb-1'>Posts</div>
+                            <div className='text-2xl font-extrabold text-white'>{userData.posts?.length || 0}</div>
                         </div>
+                        <NavLink to="/events" className='flex flex-col items-center justify-center bg-gray-800 hover:bg-gray-700 transition-colors duration-200 p-4 rounded-xl shadow-md transform hover:scale-102 text-white'>
+                            <div className='text-lg font-bold mb-1'>Events</div>
+                            <div className='text-2xl font-extrabold text-white'>{userData.events?.length || 0}</div>
+                        </NavLink>
                     </div>
                 </div>
             </div>
-            <div className="p-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
-                    {userData.posts && userData.posts.map(post => (
-                        <div key={post._id}>
-                            {post.pic && <img src={post.pic} alt="Post" className="w-50 h-50 object-cover rounded-md mb-2 cursor-pointer hover:scale-110" onClick={() => viewPost(post._id)}/>}
-                        </div>
-                    ))}
-                </div>
+
+            <div className="p-6">
+                <h3 className="text-3xl font-semibold mb-6 text-gray-900 border-b-2 border-blue-400 pb-2">Your Latest Posts</h3>
+                {userData.posts && userData.posts.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                        {userData.posts.map(post => (
+                            <div key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transform transition-transform hover:scale-102 hover:shadow-lg border border-gray-200">
+                                {post.pic && (
+                                    <img src={post.pic} alt="Post" className="w-full h-48 object-cover" />
+                                )}
+                                <div className="p-4">
+                                    <p className="text-lg font-medium text-gray-900 truncate">{post.title || 'Untitled Post'}</p>
+                                    <p className="text-sm text-gray-600 mt-1">{formatDate(post.createdAt)}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-gray-600 text-lg text-center py-8">You haven't created any posts yet. Click "New Post" to get started!</p>
+                )}
             </div>
         </div>
     );
